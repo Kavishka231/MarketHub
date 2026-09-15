@@ -10,3 +10,8 @@ spring:
     hibernate:
       ddl-auto: validate
     open-in-view: false
+
+security:
+  jwt:
+    secret: bWFya2V0aHViLWxvY2FsLWRldi1qd3Qtc2VjcmV0LWNoYW5nZS1tZQ==
+    expiration-minutes: 60
