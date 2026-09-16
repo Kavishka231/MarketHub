@@ -29,6 +29,30 @@ public class CategoryService {
         ensureUnique(name, slug);
 
         Category category = new Category(name, slug, normalizeDescription(request.description()));
+        return save(category);
+    }
+
+    @Transactional
+    public CategoryResponse update(Long categoryId, CategoryRequest request) {
+        Category category = findCategory(categoryId);
+        String name = normalizeName(request.name());
+        String slug = CategorySlugGenerator.generate(name);
+        ensureUnique(categoryId, name, slug);
+
+        category.setName(name);
+        category.setSlug(slug);
+        category.setDescription(normalizeDescription(request.description()));
+        return save(category);
+    }
+
+    @Transactional
+    public CategoryResponse setActive(Long categoryId, boolean active) {
+        Category category = findCategory(categoryId);
+        category.setActive(active);
+        return CategoryResponse.from(categoryRepository.saveAndFlush(category));
+    }
+
+    private CategoryResponse save(Category category) {
         try {
             return CategoryResponse.from(categoryRepository.saveAndFlush(category));
         } catch (DataIntegrityViolationException exception) {
@@ -36,8 +60,20 @@ public class CategoryService {
         }
     }
 
+    private Category findCategory(Long categoryId) {
+        return categoryRepository.findById(categoryId)
+                .orElseThrow(CategoryNotFoundException::new);
+    }
+
     private void ensureUnique(String name, String slug) {
         if (categoryRepository.existsByNameIgnoreCase(name) || categoryRepository.existsBySlug(slug)) {
+            throw new DuplicateCategoryException();
+        }
+    }
+
+    private void ensureUnique(Long categoryId, String name, String slug) {
+        if (categoryRepository.existsByNameIgnoreCaseAndIdNot(name, categoryId)
+                || categoryRepository.existsBySlugAndIdNot(slug, categoryId)) {
             throw new DuplicateCategoryException();
         }
     }
