@@ -34,7 +34,11 @@ public class VendorService {
             throw new DuplicateVendorApplicationException();
         }
 
-        Vendor vendor = new Vendor(user, request.storeName(), request.description(), request.phone());
+        Vendor vendor = new Vendor(
+                user,
+                request.storeName(),
+                request.description(),
+                request.phone());
         vendor.setStatus(VendorStatus.PENDING);
 
         try {
@@ -60,8 +64,33 @@ public class VendorService {
         return vendors.stream().map(VendorResponse::from).toList();
     }
 
+    @Transactional
+    public VendorResponse approve(Long vendorId) {
+        Vendor vendor = findPendingVendor(vendorId);
+        vendor.setStatus(VendorStatus.APPROVED);
+        vendor.getUser().setRole(UserRole.VENDOR);
+        userRepository.save(vendor.getUser());
+        return VendorResponse.from(vendorRepository.saveAndFlush(vendor));
+    }
+
+    @Transactional
+    public VendorResponse reject(Long vendorId) {
+        Vendor vendor = findPendingVendor(vendorId);
+        vendor.setStatus(VendorStatus.REJECTED);
+        return VendorResponse.from(vendorRepository.saveAndFlush(vendor));
+    }
+
     private User findAuthenticatedUser(String email) {
         return userRepository.findByEmail(email)
                 .orElseThrow(() -> new VendorAccessDeniedException("Authenticated user was not found"));
+    }
+
+    private Vendor findPendingVendor(Long vendorId) {
+        Vendor vendor = vendorRepository.findById(vendorId)
+                .orElseThrow(VendorNotFoundException::new);
+        if (vendor.getStatus() != VendorStatus.PENDING) {
+            throw new InvalidVendorStatusException(vendor.getStatus());
+        }
+        return vendor;
     }
 }
