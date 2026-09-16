@@ -8,6 +8,8 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 @Service
 public class VendorService {
 
@@ -48,6 +50,14 @@ public class VendorService {
         Vendor vendor = vendorRepository.findByUserId(user.getId())
                 .orElseThrow(VendorNotFoundException::new);
         return VendorResponse.from(vendor);
+    }
+
+    @Transactional(readOnly = true)
+    public List<VendorResponse> list(VendorStatus status) {
+        List<Vendor> vendors = status == null
+                ? vendorRepository.findAll()
+                : vendorRepository.findByStatus(status);
+        return vendors.stream().map(VendorResponse::from).toList();
     }
 
     private User findAuthenticatedUser(String email) {
