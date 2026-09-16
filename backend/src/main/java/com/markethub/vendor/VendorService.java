@@ -42,6 +42,14 @@ public class VendorService {
         }
     }
 
+    @Transactional(readOnly = true)
+    public VendorResponse getCurrentVendor(String email) {
+        User user = findAuthenticatedUser(email);
+        Vendor vendor = vendorRepository.findByUserId(user.getId())
+                .orElseThrow(VendorNotFoundException::new);
+        return VendorResponse.from(vendor);
+    }
+
     private User findAuthenticatedUser(String email) {
         return userRepository.findByEmail(email)
                 .orElseThrow(() -> new VendorAccessDeniedException("Authenticated user was not found"));
