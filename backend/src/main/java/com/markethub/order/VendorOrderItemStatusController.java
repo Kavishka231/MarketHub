@@ -1,0 +1,3 @@
+package com.markethub.order;
+import jakarta.validation.Valid; import org.springframework.security.core.Authentication; import org.springframework.web.bind.annotation.*;
+@RestController @RequestMapping("/api/vendor/orders") public class VendorOrderItemStatusController {private final VendorOrderItemStatusService service;public VendorOrderItemStatusController(VendorOrderItemStatusService s){service=s;}@PatchMapping("/{orderId}/items/{orderItemId}/status")public VendorOrderItemResponse update(Authentication a,@PathVariable Long orderId,@PathVariable Long orderItemId,@Valid @RequestBody VendorOrderItemStatusRequest r){return service.update(a.getName(),orderId,orderItemId,r);}}
