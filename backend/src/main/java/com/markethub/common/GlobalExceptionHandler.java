@@ -3,6 +3,9 @@ package com.markethub.common;
 import com.markethub.auth.AccountDisabledException;
 import com.markethub.auth.DuplicateEmailException;
 import com.markethub.auth.InvalidCredentialsException;
+import com.markethub.category.DuplicateCategoryException;
+import com.markethub.category.InvalidCategoryNameException;
+import com.markethub.category.CategoryNotFoundException;
 import com.markethub.vendor.DuplicateVendorApplicationException;
 import com.markethub.vendor.InvalidVendorStatusException;
 import com.markethub.vendor.VendorAccessDeniedException;
@@ -63,6 +66,25 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.FORBIDDEN).body(error);
     }
 
+    @ExceptionHandler(CategoryNotFoundException.class)
+    public ResponseEntity<ApiErrorResponse> handleCategoryNotFound(CategoryNotFoundException exception) {
+        ApiErrorResponse error = new ApiErrorResponse(
+                HttpStatus.NOT_FOUND.value(), exception.getMessage(), null);
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(error);
+    }
+    @ExceptionHandler(DuplicateCategoryException.class)
+    public ResponseEntity<ApiErrorResponse> handleDuplicateCategory(DuplicateCategoryException exception) {
+        ApiErrorResponse error = new ApiErrorResponse(
+                HttpStatus.CONFLICT.value(), exception.getMessage(), null);
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(error);
+    }
+
+    @ExceptionHandler(InvalidCategoryNameException.class)
+    public ResponseEntity<ApiErrorResponse> handleInvalidCategoryName(InvalidCategoryNameException exception) {
+        ApiErrorResponse error = new ApiErrorResponse(
+                HttpStatus.BAD_REQUEST.value(), exception.getMessage(), null);
+        return ResponseEntity.badRequest().body(error);
+    }
     @ExceptionHandler(MethodArgumentTypeMismatchException.class)
     public ResponseEntity<ApiErrorResponse> handleTypeMismatch(MethodArgumentTypeMismatchException exception) {
         Map<String, String> fieldErrors = new LinkedHashMap<>();
