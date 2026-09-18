@@ -1,0 +1,1 @@
+import {render,screen} from "@testing-library/react";import App from "./App";describe("application shell",()=>{it("renders MarketHub",()=>{render(<App/>);expect(screen.getByRole("heading",{name:/welcome to markethub/i})).toBeInTheDocument()})});
