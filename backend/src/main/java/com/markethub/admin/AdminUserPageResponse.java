@@ -1,0 +1,3 @@
+package com.markethub.admin;
+import com.markethub.user.User; import org.springframework.data.domain.Page; import java.util.List;
+public record AdminUserPageResponse(List<AdminUserResponse> content,int page,int size,long totalElements,int totalPages){static AdminUserPageResponse from(Page<User> p){return new AdminUserPageResponse(p.map(AdminUserResponse::from).getContent(),p.getNumber(),p.getSize(),p.getTotalElements(),p.getTotalPages());}}

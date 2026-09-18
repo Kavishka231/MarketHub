@@ -1,0 +1,3 @@
+package com.markethub.admin;
+import com.markethub.user.*; import java.time.Instant;
+public record AdminUserResponse(Long id,String firstName,String lastName,String email,String phone,UserRole role,UserStatus status,Instant createdAt){static AdminUserResponse from(User u){return new AdminUserResponse(u.getId(),u.getFirstName(),u.getLastName(),u.getEmail(),u.getPhone(),u.getRole(),u.getStatus(),u.getCreatedAt());}}

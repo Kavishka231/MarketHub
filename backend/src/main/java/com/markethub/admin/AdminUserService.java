@@ -1,0 +1,9 @@
+package com.markethub.admin;
+import com.markethub.user.*; import org.springframework.data.domain.*; import org.springframework.data.jpa.domain.Specification; import org.springframework.stereotype.Service; import org.springframework.transaction.annotation.Transactional;
+@Service public class AdminUserService{
+ private final UserRepository users; public AdminUserService(UserRepository users){this.users=users;}
+ @Transactional(readOnly=true) public AdminUserPageResponse list(UserRole role,UserStatus status,int page,int size){Specification<User> s=Specification.where(null);if(role!=null)s=s.and((r,q,c)->c.equal(r.get("role"),role));if(status!=null)s=s.and((r,q,c)->c.equal(r.get("status"),status));return AdminUserPageResponse.from(users.findAll(s,PageRequest.of(page,Math.min(size,100),Sort.by("createdAt").descending().and(Sort.by("id").descending()))));}
+ @Transactional(readOnly=true) public AdminUserResponse get(Long id){return AdminUserResponse.from(find(id));}
+ @Transactional public AdminUserResponse disable(String email,Long id){User u=find(id);if(u.getEmail().equals(email))throw new AdminConflictException("Administrators cannot disable their own account");if(u.getStatus()==UserStatus.DISABLED)throw new AdminConflictException("User is already disabled");u.setStatus(UserStatus.DISABLED);return AdminUserResponse.from(users.saveAndFlush(u));}
+ @Transactional public AdminUserResponse enable(Long id){User u=find(id);if(u.getStatus()==UserStatus.ACTIVE)throw new AdminConflictException("User is already active");u.setStatus(UserStatus.ACTIVE);return AdminUserResponse.from(users.saveAndFlush(u));}
+ private User find(Long id){return users.findById(id).orElseThrow(()->new AdminNotFoundException("User not found"));}}

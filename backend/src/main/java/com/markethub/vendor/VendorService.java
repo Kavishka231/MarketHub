@@ -64,6 +64,19 @@ public class VendorService {
         return vendors.stream().map(VendorResponse::from).toList();
     }
 
+    @Transactional(readOnly = true)
+    public VendorResponse get(Long vendorId) {
+        return VendorResponse.from(vendorRepository.findById(vendorId).orElseThrow(VendorNotFoundException::new));
+    }
+
+    @Transactional
+    public VendorResponse suspend(Long vendorId) {
+        Vendor vendor = vendorRepository.findById(vendorId).orElseThrow(VendorNotFoundException::new);
+        if (vendor.getStatus() != VendorStatus.APPROVED) throw new InvalidVendorStatusException(vendor.getStatus());
+        vendor.setStatus(VendorStatus.SUSPENDED);
+        return VendorResponse.from(vendorRepository.saveAndFlush(vendor));
+    }
+
     @Transactional
     public VendorResponse approve(Long vendorId) {
         Vendor vendor = findPendingVendor(vendorId);
