@@ -1,0 +1,2 @@
+import {Outlet} from "react-router-dom";import AppHeader from "../components/AppHeader";
+export default function PublicLayout(){return <><AppHeader items={[{to:"/products",label:"Products"},{to:"/login",label:"Login"},{to:"/register",label:"Register"}]}/><Outlet/></>}

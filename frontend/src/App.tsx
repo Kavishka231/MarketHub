@@ -1,1 +1,1 @@
-export default function App(){return <main className="mx-auto flex min-h-screen max-w-5xl items-center justify-center px-6"><section className="rounded-2xl bg-white p-10 text-center shadow-sm"><p className="text-sm font-semibold uppercase tracking-widest text-brand-600">Multi-vendor marketplace</p><h1 className="mt-3 text-4xl font-bold">Welcome to MarketHub</h1><p className="mt-4 text-slate-600">The frontend foundation is ready for marketplace features.</p></section></main>}
+import AppRoutes from "./routes/AppRoutes";export default function App(){return <AppRoutes/>}

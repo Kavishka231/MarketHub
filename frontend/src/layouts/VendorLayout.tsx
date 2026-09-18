@@ -1,0 +1,2 @@
+import {Outlet} from "react-router-dom";import AppHeader from "../components/AppHeader";
+export default function VendorLayout(){return <><AppHeader items={[{to:"/vendor",label:"Overview"},{to:"/vendor/products",label:"Products"},{to:"/vendor/orders",label:"Orders"}]}/><Outlet/></>}

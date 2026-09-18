@@ -1,0 +1,1 @@
+export default function PlaceholderPage({title,description}:{title:string;description?:string}){return <main className="mx-auto max-w-6xl px-6 py-12"><h1 className="text-3xl font-bold">{title}</h1><p className="mt-3 text-slate-600">{description??"This section is ready for the next frontend feature."}</p></main>}

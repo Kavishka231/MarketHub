@@ -1,0 +1,3 @@
+import {Link,NavLink} from "react-router-dom";
+export interface NavItem{to:string;label:string}
+export default function AppHeader({items=[]}:{items?:NavItem[]}){return <header className="border-b bg-white"><div className="mx-auto flex max-w-6xl items-center justify-between px-6 py-4"><Link className="text-xl font-bold text-brand-700" to="/">MarketHub</Link><nav className="flex flex-wrap gap-4 text-sm">{items.map(i=><NavLink className={({isActive})=>isActive?"font-semibold text-brand-700":"text-slate-600 hover:text-slate-900"} key={i.to} to={i.to}>{i.label}</NavLink>)}</nav></div></header>}

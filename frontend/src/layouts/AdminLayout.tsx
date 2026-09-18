@@ -1,0 +1,2 @@
+import {Outlet} from "react-router-dom";import AppHeader from "../components/AppHeader";
+export default function AdminLayout(){return <><AppHeader items={[{to:"/admin",label:"Dashboard"},{to:"/admin/users",label:"Users"},{to:"/admin/vendors",label:"Vendors"},{to:"/admin/products",label:"Products"},{to:"/admin/orders",label:"Orders"}]}/><Outlet/></>}

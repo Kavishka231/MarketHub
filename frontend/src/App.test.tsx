@@ -1,1 +1,1 @@
-import {render,screen} from "@testing-library/react";import App from "./App";describe("application shell",()=>{it("renders MarketHub",()=>{render(<App/>);expect(screen.getByRole("heading",{name:/welcome to markethub/i})).toBeInTheDocument()})});
+import {render,screen} from "@testing-library/react";import {MemoryRouter} from "react-router-dom";import App from "./App";describe("application routes",()=>{it("renders the home route",()=>{render(<MemoryRouter><App/></MemoryRouter>);expect(screen.getByRole("heading",{name:/shop from trusted/i})).toBeInTheDocument()})});
