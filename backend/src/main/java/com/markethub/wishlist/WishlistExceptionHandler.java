@@ -5,5 +5,6 @@ public class WishlistExceptionHandler {
  @ExceptionHandler(WishlistItemNotFoundException.class) ResponseEntity<ApiErrorResponse> missing(RuntimeException e){return response(HttpStatus.NOT_FOUND,e);}
  @ExceptionHandler(DuplicateWishlistItemException.class) ResponseEntity<ApiErrorResponse> duplicate(RuntimeException e){return response(HttpStatus.CONFLICT,e);}
  @ExceptionHandler(WishlistAccessDeniedException.class) ResponseEntity<ApiErrorResponse> forbidden(RuntimeException e){return response(HttpStatus.FORBIDDEN,e);}
+ @ExceptionHandler(InvalidWishlistRequestException.class) ResponseEntity<ApiErrorResponse> badRequest(RuntimeException e){return response(HttpStatus.BAD_REQUEST,e);}
  private ResponseEntity<ApiErrorResponse> response(HttpStatus s,RuntimeException e){return ResponseEntity.status(s).body(new ApiErrorResponse(s.value(),e.getMessage(),null));}
 }
