@@ -1,0 +1,3 @@
+package com.markethub.admin;
+import com.markethub.order.Order; import org.springframework.data.domain.Page; import java.util.List;
+public record AdminOrderPageResponse(List<AdminOrderSummaryResponse> content,int page,int size,long totalElements,int totalPages){static AdminOrderPageResponse from(Page<Order> p){return new AdminOrderPageResponse(p.map(AdminOrderSummaryResponse::from).getContent(),p.getNumber(),p.getSize(),p.getTotalElements(),p.getTotalPages());}}
