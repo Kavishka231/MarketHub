@@ -18,7 +18,7 @@ public class VendorOrderService {
         Vendor vendor = vendor(email);
         if (page < 0 || size < 1) throw new InvalidOrderRequestException("Invalid pagination");
         Page<Order> result = orders.findVendorOrders(vendor.getId(), status,
-                PageRequest.of(page, Math.min(size, 100), Sort.by("createdAt").descending()));
+                PageRequest.of(page, Math.min(size, 100), Sort.by("createdAt").descending().and(Sort.by("id").descending())));
         var content = result.getContent().stream().map(order -> VendorOrderSummaryResponse.from(order,
                 items.findByOrderIdAndVendorIdOrderByIdAsc(order.getId(), vendor.getId()))).toList();
         return new VendorOrderPageResponse(content, result.getNumber(), result.getSize(),

@@ -1,0 +1,5 @@
+package com.markethub.wishlist;
+import com.markethub.product.*; import com.markethub.vendor.VendorStatus; import java.math.BigDecimal; import java.time.Instant;
+public record WishlistProductResponse(Long wishlistItemId,Long productId,String productName,BigDecimal price,String imageUrl,ProductStatus productStatus,Long vendorId,String vendorName,Long categoryId,String categoryName,Instant savedAt,boolean available){
+ public static WishlistProductResponse from(WishlistItem item){Product p=item.getProduct();boolean available=p.getStatus()==ProductStatus.ACTIVE&&p.getStockQuantity()>0&&p.getVendor().getStatus()==VendorStatus.APPROVED&&p.getCategory().isActive();return new WishlistProductResponse(item.getId(),p.getId(),p.getName(),p.getPrice(),p.getImageUrl(),p.getStatus(),p.getVendor().getId(),p.getVendor().getStoreName(),p.getCategory().getId(),p.getCategory().getName(),item.getCreatedAt(),available);}
+}
