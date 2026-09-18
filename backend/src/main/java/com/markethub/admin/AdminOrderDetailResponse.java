@@ -1,0 +1,7 @@
+package com.markethub.admin;
+import com.markethub.order.*; import com.markethub.vendor.Vendor; import java.math.BigDecimal; import java.time.Instant; import java.util.*;
+public record AdminOrderDetailResponse(Long id,String orderNumber,OrderStatus status,Customer customer,Delivery delivery,List<Item> items,BigDecimal subtotal,BigDecimal deliveryFee,BigDecimal total,PaymentMethod paymentMethod,Instant createdAt){
+ record Customer(Long id,String name,String email){}
+ record Delivery(String fullName,String phone,String addressLine1,String addressLine2,String city,String district,String postalCode){}
+ record Item(Long id,Long productId,Long vendorId,String vendorName,String productName,BigDecimal unitPrice,int quantity,BigDecimal subtotal,OrderStatus status){}
+ static AdminOrderDetailResponse from(Order o,List<OrderItem> items,Map<Long,Vendor> vendors){var c=o.getCustomer();return new AdminOrderDetailResponse(o.getId(),o.getOrderNumber(),o.getStatus(),new Customer(c.getId(),(c.getFirstName()+" "+c.getLastName()).trim(),c.getEmail()),new Delivery(o.getDeliveryFullName(),o.getDeliveryPhone(),o.getDeliveryAddressLine1(),o.getDeliveryAddressLine2(),o.getDeliveryCity(),o.getDeliveryDistrict(),o.getDeliveryPostalCode()),items.stream().map(i->new Item(i.getId(),i.getProductId(),i.getVendorId(),vendors.containsKey(i.getVendorId())?vendors.get(i.getVendorId()).getStoreName():null,i.getProductName(),i.getUnitPrice(),i.getQuantity(),i.getSubtotal(),i.getStatus())).toList(),o.getSubtotal(),o.getDeliveryFee(),o.getTotal(),o.getPaymentMethod(),o.getCreatedAt());}}

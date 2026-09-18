@@ -1,0 +1,3 @@
+package com.markethub.admin;
+import com.markethub.order.*; import java.math.BigDecimal; import java.time.Instant;
+public record AdminOrderSummaryResponse(Long id,String orderNumber,OrderStatus status,Long customerId,String customerName,BigDecimal total,PaymentMethod paymentMethod,Instant createdAt){static AdminOrderSummaryResponse from(Order o){return new AdminOrderSummaryResponse(o.getId(),o.getOrderNumber(),o.getStatus(),o.getCustomer().getId(),(o.getCustomer().getFirstName()+" "+o.getCustomer().getLastName()).trim(),o.getTotal(),o.getPaymentMethod(),o.getCreatedAt());}}

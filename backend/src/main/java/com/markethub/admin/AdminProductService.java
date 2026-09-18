@@ -1,0 +1,8 @@
+package com.markethub.admin;
+import com.markethub.product.*; import org.springframework.data.domain.*; import org.springframework.data.jpa.domain.Specification; import org.springframework.stereotype.Service; import org.springframework.transaction.annotation.Transactional;
+@Service public class AdminProductService{
+ private final ProductRepository products;public AdminProductService(ProductRepository p){products=p;}
+ @Transactional(readOnly=true) public AdminProductPageResponse list(Long vendorId,Long categoryId,ProductStatus status,int page,int size){Specification<Product>s=Specification.where(null);if(vendorId!=null)s=s.and((r,q,c)->c.equal(r.get("vendor").get("id"),vendorId));if(categoryId!=null)s=s.and((r,q,c)->c.equal(r.get("category").get("id"),categoryId));if(status!=null)s=s.and((r,q,c)->c.equal(r.get("status"),status));return AdminProductPageResponse.from(products.findAll(s,PageRequest.of(page,Math.min(size,100),Sort.by("createdAt").descending().and(Sort.by("id").descending()))));}
+ @Transactional(readOnly=true) public ProductResponse get(Long id){return ProductResponse.from(find(id));}
+ @Transactional public ProductResponse deactivate(Long id){Product p=find(id);if(p.getStatus()==ProductStatus.ARCHIVED)throw new AdminConflictException("Archived product cannot be deactivated");if(p.getStatus()==ProductStatus.INACTIVE)throw new AdminConflictException("Product is already inactive");p.setStatus(ProductStatus.INACTIVE);return ProductResponse.from(products.saveAndFlush(p));}
+ private Product find(Long id){return products.findById(id).orElseThrow(()->new AdminNotFoundException("Product not found"));}}

@@ -24,6 +24,12 @@ public class AdminVendorController {
         return vendorService.list(status);
     }
 
+    @GetMapping("/{vendorId}")
+    public VendorResponse get(@PathVariable Long vendorId) { return vendorService.get(vendorId); }
+
+    @PatchMapping("/{vendorId}/suspend")
+    public VendorResponse suspend(@PathVariable Long vendorId) { return vendorService.suspend(vendorId); }
+
     @PatchMapping("/{vendorId}/approve")
     public VendorResponse approve(@PathVariable Long vendorId) {
         return vendorService.approve(vendorId);
