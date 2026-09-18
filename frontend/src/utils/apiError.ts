@@ -1,1 +1,3 @@
-import axios from "axios";export function apiErrorMessage(error:unknown,fallback:string){if(axios.isAxiosError(error)){return error.response?.data?.message??fallback}return error instanceof Error?error.message:fallback}
+import axios from "axios";export interface NormalizedApiError{status?:number;message:string}
+export function normalizeApiError(error:unknown,fallback="Something went wrong"):NormalizedApiError{if(axios.isAxiosError(error))return{status:error.response?.status,message:error.response?.data?.message??fallback};return{message:error instanceof Error?error.message:fallback}}
+export function apiErrorMessage(error:unknown,fallback:string){return normalizeApiError(error,fallback).message}

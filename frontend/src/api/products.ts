@@ -1,0 +1,6 @@
+import client from "./client";import type{PageResponse,Product,ProductQuery,Category}from "../types/marketplace";
+const backendParams=(query:ProductQuery)=>({categoryId:query.categoryId,vendorId:query.vendorId,minPrice:query.minPrice,maxPrice:query.maxPrice,sort:query.sort??"newest",page:query.page??0,size:query.size??20});
+export async function fetchProducts(query:ProductQuery={}):Promise<PageResponse<Product>>{return(await client.get<PageResponse<Product>>("/api/products",{params:backendParams(query)})).data}
+export async function fetchProduct(productId:number):Promise<Product>{return(await client.get<Product>("/api/products/"+productId)).data}
+export async function fetchCategories():Promise<Category[]>{return(await client.get<Category[]>("/api/categories")).data}
+export function refineProductsBySearch(page:PageResponse<Product>,search?:string):PageResponse<Product>{const term=search?.trim().toLowerCase();if(!term)return page;return{...page,content:page.content.filter(p=>[p.name,p.description,p.vendorName,p.categoryName].some(value=>value?.toLowerCase().includes(term)))}}
