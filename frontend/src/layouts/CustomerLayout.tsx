@@ -1,2 +1,1 @@
-import {Outlet} from "react-router-dom";import AppHeader from "../components/AppHeader";
-export default function CustomerLayout(){return <><AppHeader items={[{to:"/account",label:"Account"},{to:"/account/orders",label:"Orders"},{to:"/account/wishlist",label:"Wishlist"}]}/><Outlet/></>}
+import{Outlet}from"react-router-dom";import AppHeader from"../components/AppHeader";export default function CustomerLayout(){return <><AppHeader items={[{to:"/account",label:"Account"},{to:"/account/cart",label:"Cart"},{to:"/account/orders",label:"Orders"},{to:"/account/wishlist",label:"Wishlist"}]}/><Outlet/></>}

@@ -1,0 +1,2 @@
+import client from"./client";import type{Address,AddressRequest,OrderSummary,PaymentMethod}from"../types/shopping";
+export async function fetchAddresses():Promise<Address[]>{return(await client.get<Address[]>("/api/addresses")).data}export async function createAddress(input:AddressRequest):Promise<Address>{return(await client.post<Address>("/api/addresses",input)).data}export async function placeOrder(input:{addressId:number;paymentMethod:PaymentMethod}):Promise<OrderSummary>{return(await client.post<OrderSummary>("/api/orders/checkout",input)).data}

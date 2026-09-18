@@ -1,0 +1,1 @@
+import type{OrderStatus}from"../../types/shopping";export default function OrderStatusBadge({status}:{status:OrderStatus}){const tone=status==="CANCELLED"?"bg-red-100 text-red-800":status==="DELIVERED"?"bg-green-100 text-green-800":"bg-blue-100 text-blue-800";return <span className={`rounded-full px-3 py-1 text-xs font-semibold ${tone}`}>{status.replace("_"," ")}</span>}
