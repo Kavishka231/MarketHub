@@ -1,0 +1,1 @@
+export default function EmptyState(){return <section className="rounded-xl border border-dashed bg-white px-6 py-16 text-center"><h2 className="text-xl font-semibold">No products found</h2><p className="mt-2 text-slate-600">Try changing your search or filters.</p></section>}
