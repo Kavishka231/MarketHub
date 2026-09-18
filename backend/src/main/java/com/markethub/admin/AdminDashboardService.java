@@ -1,0 +1,6 @@
+package com.markethub.admin;
+import com.markethub.user.*; import com.markethub.vendor.*; import com.markethub.product.*; import com.markethub.order.*; import org.springframework.stereotype.Service; import org.springframework.transaction.annotation.Transactional;
+@Service public class AdminDashboardService{
+ private final UserRepository users;private final VendorRepository vendors;private final ProductRepository products;private final OrderRepository orders;
+ public AdminDashboardService(UserRepository u,VendorRepository v,ProductRepository p,OrderRepository o){users=u;vendors=v;products=p;orders=o;}
+ @Transactional(readOnly=true) public AdminDashboardResponse get(){return new AdminDashboardResponse(users.count(),users.countByRole(UserRole.CUSTOMER),vendors.count(),vendors.countByStatus(VendorStatus.APPROVED),vendors.countByStatus(VendorStatus.PENDING),vendors.countByStatus(VendorStatus.SUSPENDED),products.count(),products.countByStatus(ProductStatus.ACTIVE),products.countByStatus(ProductStatus.OUT_OF_STOCK),orders.count(),orders.countByStatus(OrderStatus.PENDING),orders.countByStatus(OrderStatus.DELIVERED),orders.totalNonCancelledSales());}}
