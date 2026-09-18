@@ -1,0 +1,2 @@
+@tailwind base;@tailwind components;@tailwind utilities;
+@layer base{body{@apply m-0 bg-slate-50 text-slate-900 antialiased}button,a{@apply transition-colors}}

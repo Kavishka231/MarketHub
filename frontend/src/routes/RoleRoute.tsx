@@ -1,0 +1,3 @@
+import{Navigate,Outlet}from "react-router-dom";import{useAuth}from "../features/auth/AuthContext";import type{UserRole}from "../types/auth";
+const home:Record<UserRole,string>={CUSTOMER:"/",VENDOR:"/vendor",ADMIN:"/admin"};
+export default function RoleRoute({roles}:{roles:UserRole[]}){const{user}=useAuth();return user&&roles.includes(user.role)?<Outlet/>:<Navigate to={user?home[user.role]:"/login"} replace/>}
