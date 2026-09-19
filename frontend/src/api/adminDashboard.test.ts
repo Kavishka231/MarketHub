@@ -1,0 +1,1 @@
+import client from"./client";import{fetchAdminDashboard}from"./adminDashboard";vi.mock("./client",()=>({default:{get:vi.fn()}}));it("loads authoritative admin aggregates",async()=>{const data={totalUsers:10};vi.mocked(client.get).mockResolvedValue({data});await expect(fetchAdminDashboard()).resolves.toEqual(data);expect(client.get).toHaveBeenCalledWith("/api/admin/dashboard")});

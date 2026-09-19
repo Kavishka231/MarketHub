@@ -1,0 +1,1 @@
+import client from"./client";import type{AdminDashboard}from"../types/admin";export async function fetchAdminDashboard():Promise<AdminDashboard>{return(await client.get<AdminDashboard>("/api/admin/dashboard")).data}

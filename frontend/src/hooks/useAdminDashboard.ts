@@ -1,0 +1,1 @@
+import{useQuery}from"@tanstack/react-query";import{fetchAdminDashboard}from"../api/adminDashboard";export const adminDashboardKey=["admin","dashboard"]as const;export function useAdminDashboard(){return useQuery({queryKey:adminDashboardKey,queryFn:fetchAdminDashboard})}
