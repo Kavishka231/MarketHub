@@ -1,5 +1,6 @@
 import { useCallback, useMemo } from "react";
 import { useSearchParams } from "react-router-dom";
+import RecentSearches from "../components/discovery/RecentSearches";
 import EmptyState from "../components/marketplace/EmptyState";
 import ErrorState from "../components/marketplace/ErrorState";
 import Pagination from "../components/marketplace/Pagination";
@@ -11,6 +12,7 @@ import ProductSort from "../components/marketplace/ProductSort";
 import { useCategories, useProducts } from "../hooks/useMarketplace";
 import type { ProductSort as Sort } from "../types/marketplace";
 import { normalizeApiError } from "../utils/apiError";
+import { saveRecentSearch } from "../utils/recentSearches";
 import {
   parseProductSearchParams,
   updateProductSearchParams,
@@ -73,8 +75,17 @@ export default function ProductsPage() {
 
       <div className="mt-6 space-y-4">
         <ProductSearch
-          onChange={(search) => update({ q: search || undefined })}
+          onChange={(search) => {
+            if (search) {
+              saveRecentSearch(search);
+            }
+            update({ q: search || undefined });
+          }}
           value={query.search ?? ""}
+        />
+        <RecentSearches
+          onSelect={(search) => update({ q: search })}
+          refreshKey={query.search}
         />
         <ProductFilters
           categories={categories.data ?? []}
