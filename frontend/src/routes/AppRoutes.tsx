@@ -12,6 +12,8 @@ import RoleRoute from "./RoleRoute";
 
 const AccountDashboardPage = lazy(() => import("../pages/AccountDashboardPage"));
 const AdminDashboardPage = lazy(() => import("../pages/AdminDashboardPage"));
+const AdminAuditLogsPage = lazy(() => import("../pages/AdminAuditLogsPage"));
+const AdminAuditLogDetailPage = lazy(() => import("../pages/AdminAuditLogDetailPage"));
 const AdminOrderDetailPage = lazy(() => import("../pages/AdminOrderDetailPage"));
 const AdminOrdersPage = lazy(() => import("../pages/AdminOrdersPage"));
 const AdminProductDetailPage = lazy(() => import("../pages/AdminProductDetailPage"));
@@ -86,6 +88,8 @@ export default function AppRoutes() {
               <Route path="products/:productId" element={<AdminProductDetailPage />} />
               <Route path="orders" element={<AdminOrdersPage />} />
               <Route path="orders/:orderId" element={<AdminOrderDetailPage />} />
+              <Route path="audit-logs" element={<AdminAuditLogsPage />} />
+              <Route path="audit-logs/:auditId" element={<AdminAuditLogDetailPage />} />
             </Route>
           </Route>
         </Route>
