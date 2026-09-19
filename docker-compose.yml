@@ -34,6 +34,9 @@ services:
       JWT_SECRET: ${JWT_SECRET:?Set JWT_SECRET}
       ALLOWED_ORIGINS: ${ALLOWED_ORIGINS:-http://localhost:3000}
       SPRING_PROFILES_ACTIVE: prod
+      GIT_SHA: ${MARKETHUB_IMAGE_TAG:-unknown}
+      BUILD_TIME: ${BUILD_TIME:-unknown}
+      APP_ENVIRONMENT: ${APP_ENVIRONMENT:-staging}
       REDIS_HOST: redis
       REDIS_PORT: 6379
     ports: ["8080:8080"]

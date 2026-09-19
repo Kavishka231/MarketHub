@@ -26,11 +26,16 @@ security:
     expiration-minutes: ${JWT_EXPIRATION_MINUTES:60}
 
 management:
+  info:
+    env:
+      enabled: true
   endpoints:
     web:
       exposure:
         include: health,info,prometheus
   endpoint:
+    info:
+      access: unrestricted
     health:
       probes:
         enabled: true
@@ -49,3 +54,10 @@ management:
 server:
   shutdown: graceful
 spring.lifecycle.timeout-per-shutdown-phase: 20s
+info:
+  app:
+    name: ${spring.application.name}
+    version: "@project.version@"
+    gitSha: ${GIT_SHA:unknown}
+    buildTime: ${BUILD_TIME:unknown}
+    environment: ${APP_ENVIRONMENT:${SPRING_PROFILES_ACTIVE:local}}

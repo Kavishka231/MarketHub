@@ -138,3 +138,40 @@ jobs:
           name: recovery-verification-logs
           path: recovery-application.log
           retention-days: 7
+
+  release-artifacts:
+    runs-on: ubuntu-latest
+    needs: [backend, frontend]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with: { distribution: temurin, java-version: "17", cache: maven }
+      - uses: actions/setup-node@v4
+        with: { node-version: "22", cache: npm, cache-dependency-path: frontend/package-lock.json }
+      - name: Build backend artifact and CycloneDX SBOM
+        working-directory: backend
+        run: mvn --batch-mode --no-transfer-progress clean package -DskipTests
+      - name: Build frontend artifact and CycloneDX SBOM
+        working-directory: frontend
+        env: { VITE_API_BASE_URL: "https://api.example.invalid" }
+        run: |
+          npm ci
+          npm run build
+          npm sbom --sbom-format=cyclonedx > frontend-sbom.json
+          tar -czf frontend-dist.tar.gz -C dist .
+      - name: Generate checksummed release manifest
+        shell: pwsh
+        run: |
+          $jar = (Get-ChildItem backend/target/markethub-api-*.jar | Where-Object { $_.Name -notmatch 'original' } | Select-Object -First 1).FullName
+          ./scripts/release.ps1 `
+            -GitSha "${{ github.sha }}" `
+            -ArtifactPath @($jar, "frontend/frontend-dist.tar.gz") `
+            -SbomPath @("backend/target/classes/META-INF/sbom/application.cdx.json", "frontend/frontend-sbom.json") `
+            -OutputDirectory "artifacts/release"
+          ./scripts/test-release-tools.ps1
+      - uses: actions/upload-artifact@v4
+        with:
+          name: markethub-release-${{ github.sha }}
+          path: artifacts/release
+          if-no-files-found: error
+          retention-days: 30
