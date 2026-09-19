@@ -11,7 +11,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 public class PublicProductSecurityConfig {
  @Bean @Order(0)
  SecurityFilterChain publicProductSecurity(HttpSecurity http,JwtAuthenticationFilter jwt,RestAuthenticationEntryPoint entry) throws Exception {
-  return http.securityMatcher("/api/products/**").csrf(c->c.disable()).sessionManagement(s->s.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+  return http.securityMatcher("/api/products/**").csrf(c->c.disable()).cors(cors -> {}).sessionManagement(s->s.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
    .exceptionHandling(e->e.authenticationEntryPoint(entry)).authorizeHttpRequests(a->a
     .requestMatchers(HttpMethod.GET,"/api/products/**").permitAll()
     .requestMatchers(HttpMethod.POST,"/api/products/*/reviews").hasRole("CUSTOMER")
