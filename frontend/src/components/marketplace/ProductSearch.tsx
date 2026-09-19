@@ -1,1 +1,53 @@
-import{useEffect,useState,type FormEvent}from "react";export default function ProductSearch({value,onChange}:{value:string;onChange:(value:string)=>void}){const[input,setInput]=useState(value);useEffect(()=>setInput(value),[value]);const submit=(e:FormEvent)=>{e.preventDefault();onChange(input.trim())};return <form className="flex gap-2" onSubmit={submit} role="search"><label className="sr-only" htmlFor="product-search">Search products</label><input id="product-search" className="w-full rounded border px-3 py-2" placeholder="Search this page" value={input} onChange={e=>setInput(e.target.value)}/><button className="rounded bg-brand-600 px-4 py-2 text-white">Search</button></form>}
+import { useEffect, useState } from "react";
+
+interface ProductSearchProps {
+  value: string;
+  onChange: (value: string) => void;
+}
+
+export default function ProductSearch({
+  value,
+  onChange,
+}: ProductSearchProps) {
+  const [input, setInput] = useState(value);
+
+  useEffect(() => {
+    setInput(value);
+  }, [value]);
+
+  useEffect(() => {
+    if (input === value) {
+      return;
+    }
+    const timer = window.setTimeout(() => onChange(input.trim()), 350);
+    return () => window.clearTimeout(timer);
+  }, [input, onChange, value]);
+
+  return (
+    <div className="flex gap-2" role="search">
+      <label className="sr-only" htmlFor="product-search">
+        Search products
+      </label>
+      <input
+        className="w-full rounded border px-3 py-2"
+        id="product-search"
+        maxLength={100}
+        onChange={(event) => setInput(event.target.value)}
+        placeholder="Search products, categories, or stores"
+        value={input}
+      />
+      {input && (
+        <button
+          className="rounded border px-4 py-2"
+          onClick={() => {
+            setInput("");
+            onChange("");
+          }}
+          type="button"
+        >
+          Clear search
+        </button>
+      )}
+    </div>
+  );
+}

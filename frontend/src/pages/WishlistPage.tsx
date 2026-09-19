@@ -1,4 +1,5 @@
 import { Link, useSearchParams } from "react-router-dom";
+import CategoryShortcuts from "../components/discovery/CategoryShortcuts";
 import Pagination from "../components/marketplace/Pagination";
 import WishlistButton from "../components/wishlist/WishlistButton";
 import { useWishlist } from "../hooks/useWishlist";
@@ -35,6 +36,9 @@ export default function WishlistPage() {
         <section className="mt-10 rounded-xl border bg-white p-10 text-center">
           <h2 className="text-xl font-semibold">Your wishlist is empty</h2>
           <Link className="mt-4 inline-block underline" to="/products">Browse products</Link>
+          <div className="mt-6">
+            <CategoryShortcuts />
+          </div>
         </section>
       ) : (
         <div className="mt-8 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">

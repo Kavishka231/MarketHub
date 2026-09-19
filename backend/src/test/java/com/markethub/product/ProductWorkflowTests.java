@@ -153,6 +153,38 @@ class ProductWorkflowTests {
                 .andExpect(jsonPath("$.content[0].name").value("Book"));
     }
 
+    @Test
+    void publicSearchIsCaseInsensitiveComposableAndPaginatesAfterFiltering() throws Exception {
+        Vendor first = vendor("search-first@example.com", VendorStatus.APPROVED);
+        Vendor second = vendor("search-second@example.com", VendorStatus.APPROVED);
+        Category tea = category("Search Tea", true);
+        Category coffee = category("Search Coffee", true);
+        products.saveAllAndFlush(java.util.List.of(
+                product(first, tea, "Ceylon Breakfast", "12", 2, ProductStatus.ACTIVE),
+                product(first, tea, "Ceylon Earl Grey", "18", 2, ProductStatus.ACTIVE),
+                product(second, coffee, "Dark Roast", "15", 2, ProductStatus.ACTIVE)));
+
+        mvc.perform(get("/api/products")
+                        .param("search", "cEyLoN")
+                        .param("categoryId", tea.getId().toString())
+                        .param("minPrice", "15")
+                        .param("size", "1"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.totalElements").value(1))
+                .andExpect(jsonPath("$.content[0].name").value("Ceylon Earl Grey"));
+
+        mvc.perform(get("/api/products").param("search", "Store search-second"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.totalElements").value(1))
+                .andExpect(jsonPath("$.content[0].name").value("Dark Roast"));
+    }
+
+    @Test
+    void publicSearchRejectsOverlongTerms() throws Exception {
+        mvc.perform(get("/api/products").param("search", "x".repeat(101)))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.message").value("Search must not exceed 100 characters"));
+    }
     @Test void publicSortingSupportsPriceAndNewest() throws Exception {
         Vendor vendor = vendor("sort@example.com", VendorStatus.APPROVED);
         Category category = category("Sort", true);
