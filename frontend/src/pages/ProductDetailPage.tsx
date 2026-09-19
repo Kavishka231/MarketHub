@@ -4,6 +4,7 @@ import ProductGallery from "../components/marketplace/ProductGallery";
 import ProductInformation from "../components/marketplace/ProductInformation";
 import PurchasePanel from "../components/marketplace/PurchasePanel";
 import ReviewSection from "../components/reviews/ReviewSection";
+import RelatedProductsSection from "../components/discovery/RelatedProductsSection";
 import WishlistButton from "../components/wishlist/WishlistButton";
 import { useProduct } from "../hooks/useMarketplace";
 import { normalizeApiError } from "../utils/apiError";
@@ -65,6 +66,7 @@ export default function ProductDetailPage() {
       </div>
 
       <ReviewSection productId={product.id} />
+      <RelatedProductsSection categoryId={product.categoryId} productId={product.id} />
     </main>
   );
 }

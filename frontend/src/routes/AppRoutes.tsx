@@ -10,6 +10,7 @@ import AdminVendorDetailPage from "../pages/AdminVendorDetailPage";
 import AdminVendorsPage from "../pages/AdminVendorsPage";
 import AccountDashboardPage from "../pages/AccountDashboardPage";
 import CartPage from "../pages/CartPage";
+import CategoryPage from "../pages/CategoryPage";
 import CheckoutPage from "../pages/CheckoutPage";
 import HomePage from "../pages/HomePage";
 import LoginPage from "../pages/LoginPage";
@@ -20,6 +21,7 @@ import ProductDetailPage from "../pages/ProductDetailPage";
 import ProductsPage from "../pages/ProductsPage";
 import RegisterPage from "../pages/RegisterPage";
 import VendorDashboardPage from "../pages/VendorDashboardPage";
+import VendorStorefrontPage from "../pages/VendorStorefrontPage";
 import VendorOrderDetailPage from "../pages/VendorOrderDetailPage";
 import VendorOrdersPage from "../pages/VendorOrdersPage";
 import VendorProductFormPage from "../pages/VendorProductFormPage";
@@ -39,6 +41,8 @@ export default function AppRoutes() {
         <Route index element={<HomePage />} />
         <Route path="products" element={<ProductsPage />} />
         <Route path="products/:productId" element={<ProductDetailPage />} />
+        <Route path="categories/:categoryId" element={<CategoryPage />} />
+        <Route path="vendors/:vendorId" element={<VendorStorefrontPage />} />
         <Route path="login" element={<LoginPage />} />
         <Route path="register" element={<RegisterPage />} />
       </Route>
