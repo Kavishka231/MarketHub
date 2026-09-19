@@ -1,32 +1,23 @@
 param(
     [string]$BackendUrl = "http://localhost:8080",
-    [string]$FrontendUrl = "http://localhost:3000"
+    [string]$FrontendUrl = "http://localhost:3000",
+    [switch]$VerifyRedis
 )
 
 $ErrorActionPreference = "Stop"
-
-$health = Invoke-RestMethod "$BackendUrl/actuator/health"
-if ($health.status -ne "UP") {
-    throw "Backend health is not UP"
-}
-
-$readiness = Invoke-RestMethod "$BackendUrl/api/readiness"
-if ($readiness.status -ne "UP") {
-    throw "Backend readiness is not UP"
-}
-
-$frontend = Invoke-WebRequest $FrontendUrl -UseBasicParsing
-if ($frontend.StatusCode -ne 200) {
-    throw "Frontend did not return HTTP 200"
-}
-
+if ((Invoke-RestMethod "$BackendUrl/actuator/health").status -ne "UP") { throw "Backend health is not UP" }
+if ((Invoke-RestMethod "$BackendUrl/api/readiness").status -ne "UP") { throw "Backend readiness is not UP" }
+if ((Invoke-WebRequest "$FrontendUrl" -UseBasicParsing).StatusCode -ne 200) { throw "Frontend is unavailable" }
+$products = Invoke-WebRequest "$BackendUrl/api/products?page=0&size=1" -UseBasicParsing
+if ($products.StatusCode -ne 200) { throw "Public product endpoint is unavailable" }
 try {
     Invoke-RestMethod "$BackendUrl/api/cart"
-    throw "Protected cart endpoint unexpectedly allowed anonymous access"
+    throw "Protected cart endpoint allowed anonymous access"
 } catch {
-    if ($_.Exception.Response.StatusCode.value__ -ne 401) {
-        throw
-    }
+    if ($_.Exception.Response.StatusCode.value__ -ne 401) { throw }
 }
-
+if ($VerifyRedis) {
+    $pong = docker compose exec -T redis redis-cli ping
+    if ($pong.Trim() -ne "PONG") { throw "Redis did not respond to PING" }
+}
 Write-Host "MarketHub smoke checks passed."

@@ -1,5 +1,7 @@
 package com.markethub.category;
 
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -15,6 +17,7 @@ public class CategoryService {
         this.categoryRepository = categoryRepository;
     }
 
+    @Cacheable("activeCategories")
     @Transactional(readOnly = true)
     public List<CategoryResponse> listActive() {
         return categoryRepository.findByActiveTrueOrderByNameAsc().stream()
@@ -22,6 +25,7 @@ public class CategoryService {
                 .toList();
     }
 
+    @CacheEvict(value = "activeCategories", allEntries = true)
     @Transactional
     public CategoryResponse create(CategoryRequest request) {
         String name = normalizeName(request.name());
@@ -32,6 +36,7 @@ public class CategoryService {
         return save(category);
     }
 
+    @CacheEvict(value = "activeCategories", allEntries = true)
     @Transactional
     public CategoryResponse update(Long categoryId, CategoryRequest request) {
         Category category = findCategory(categoryId);
@@ -45,6 +50,7 @@ public class CategoryService {
         return save(category);
     }
 
+    @CacheEvict(value = "activeCategories", allEntries = true)
     @Transactional
     public CategoryResponse setActive(Long categoryId, boolean active) {
         Category category = findCategory(categoryId);
