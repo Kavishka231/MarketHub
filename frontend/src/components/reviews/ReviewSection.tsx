@@ -31,7 +31,7 @@ export default function ReviewSection({ productId }: { productId: number }) {
   });
 
   return (
-    <section className="mt-14 border-t pt-10">
+    <section className="mt-14 border-t pt-10" id="reviews">
       <h2 className="text-2xl font-bold">Customer reviews</h2>
       <p className="mt-1 text-slate-600">
         {reviews.data
