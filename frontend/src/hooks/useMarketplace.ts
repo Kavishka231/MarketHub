@@ -19,6 +19,7 @@ export function useProducts(query: ProductQuery) {
     queryKey: marketplaceKeys.products(query),
     queryFn: () => fetchProducts(query),
     placeholderData: keepPreviousData,
+    staleTime: 30 * 1000,
   });
 }
 
@@ -27,6 +28,7 @@ export function useProduct(id: number) {
     queryKey: marketplaceKeys.product(id),
     queryFn: () => fetchProduct(id),
     enabled: Number.isInteger(id) && id > 0,
+    staleTime: 60 * 1000,
     retry: (count, error) => {
       const status = (error as { response?: { status?: number } }).response
         ?.status;
