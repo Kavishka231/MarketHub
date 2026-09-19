@@ -20,3 +20,8 @@ security:
 
 rate-limit:
   enabled: false
+
+management:
+  health:
+    redis:
+      enabled: false
